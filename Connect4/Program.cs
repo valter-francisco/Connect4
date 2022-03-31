@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Connect4
 {
@@ -10,7 +11,6 @@ namespace Connect4
             #region Board Array
 
             string[,] board = new string[16, 16];
-
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -19,6 +19,7 @@ namespace Connect4
                 }
             }
 
+            string[,] board2 = new string[16, 16];
 
             #endregion
 
@@ -40,7 +41,7 @@ namespace Connect4
                         Console.Clear();
                         Console.WriteLine("The game is played between two players, you and your opponent take turns. \nChoose a row to place your piece and it will fall to the bottom of the board.\nYou win when you connect 4, be it in a line, row or diagonally. \nIf neither player can connect 4 then the game is a tie. ");
                         Console.WriteLine();
-                        DrawBoard(board);
+                        DrawBoard(board,board2);
                         Console.WriteLine();
                         Console.Write("Press any key to return to main menu.");
                         Console.ReadKey();
@@ -59,8 +60,8 @@ namespace Connect4
 
             do //game loop
             {
-                Console.Clear();
-                DrawBoard(board);
+               // Console.Clear();
+                DrawBoard(board, board2);
 
                 if (turns % 2 == 0)
                 {
@@ -84,9 +85,9 @@ namespace Connect4
                         input = input.Trim();
                         inp = Convert.ToInt32(input);
 
-                        if (inp <= 0 || inp >= 7)
+                        if (inp <= 0 || inp >= (board2.GetLength(1)+1))
                         {
-                            return;
+                            continue;
                         }
                         else
                         {
@@ -101,22 +102,26 @@ namespace Connect4
                     }
                 } while (correctInput == false); //row choice verification loop
 
-                bool availableRow = AvailableRow(inp, board);
+                bool availableRow = AvailableRow(inp, board2);
 
                 //inserting piece if row is available (if... else)
                 if (availableRow == true)
                 {
-                    InsertPiece(inp, board, turns);
+                    InsertPiece(inp, board2, turns);
                     turns++;
+
+
                 }
 
-                VictoryVertical(board);
+                VictoryVertical(board2);
 
-                VictoryHorizontal(board);
+                VictoryHorizontal(board2);
 
-                VictoryDiagonalDown(board);
+                VictoryDiagonalDown(board2);
 
-                VictoryDiagonalUP(board);
+                
+
+                //VictoryDiagonalUP(board);
 
             } while (turns <= 41); //game loop
 
@@ -132,7 +137,7 @@ namespace Connect4
         /// Method used to draw the board
         /// </summary>
         /// <param name="board">array used to store the board variables</param>
-        public static void DrawBoard(string[,] board)
+        public static void DrawBoard(string[,] board, string[,] board2)
         {
             //Console.WriteLine("        R  O  W  S   ");
             //Console.WriteLine("| 1 | 2 | 3 | 4 | 5 | 6 | 7 |");
@@ -169,12 +174,22 @@ namespace Connect4
                 Console.Write("----");
             Console.WriteLine();
 
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int i = 0; i < board2.GetLength(0); i++)
             {
 
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (int j = 0; j < board2.GetLength(1); j++)
                 {
-                    Console.Write("| " + board[i, j] + " ");
+                    bool isEmpty = String.IsNullOrEmpty(board2[i, j]);
+                    if(isEmpty == false)
+                    {
+                        Console.Write("| " + board2[i, j] + " ");
+                    }
+                    else
+                    {
+                        Console.Write("| " + board[i, j] + " ");
+                    }
+
+
                 }
                 Console.WriteLine("|");
 
@@ -202,10 +217,10 @@ namespace Connect4
         /// <param name="inp">row chosen by the player</param>
         /// <param name="board">board array</param>
         /// <returns>returns false if the top line in the board is filled by a piece</returns>
-        public static bool AvailableRow(int inp, string[,] board)
+        public static bool AvailableRow(int inp, string[,] board2)
         {
-
-            if (board[0, inp] != " ")
+            bool isEmpty = String.IsNullOrEmpty(board2[0, inp]);
+            if (isEmpty == false)
             {
                 return false;
             }
@@ -221,28 +236,34 @@ namespace Connect4
         /// </summary>
         /// <param name="inp">Row chosen by the player, used after verification</param>
         /// <param name="board">Board array</param>
-        public static void InsertPiece(int inp, string[,] board, int turns)
+        public static void InsertPiece(int inp, string[,] board2, int turns)
         {
             string input;
             if (turns % 2 == 0)
             {
                 input = "0";
+               
             }
             else
             {
                 input = "X";
             }
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                if (board[i, inp] != " ")
+
+            for (int i = (board2.GetLength(0) - 1); i >= 0; i--)
+            {         
+                
+                bool isEmpty = String.IsNullOrEmpty(board2[i, inp]);
+                if (isEmpty == true && i == board2.GetLength(0) - 1)
                 {
-                    board[(i - 1), inp] = input;
+                    board2[i, inp] = input;
                     return;
+                    
                 }
-                else if (board[i, inp] == " " && i == 5)
+                else if (isEmpty == true )
                 {
-                    board[i, inp] = input;
+                    board2[(i), inp] = input;
                     return;
+                    
                 }
             }
         }
@@ -295,20 +316,20 @@ namespace Connect4
         /// Win condition vertical verification
         /// </summary>
         /// <param name="board">Board array</param> 
-        public static void VictoryVertical(string[,] board)
+        public static void VictoryVertical(string[,] board2)
         {
-            for (int i = 0; i < (board.GetLength(0) - 3); i++)
+            for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (int j = 0; j < board2.GetLength(1); j++)
                 {
-                    if ((board[i, j] == board[(i + 1), j] && board[i, j] == board[(i + 2), j] && board[i, j] == board[(i + 3), j]) && board[i, j] == "X")
+                    if ((board2[i, j] == board2[(i + 1), j] && board2[i, j] == board2[(i + 2), j] && board2[i, j] == board2[(i + 3), j]) && board2[i, j] == "X")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
-                    else if ((board[i, j] == board[(i + 1), j] && board[i, j] == board[(i + 2), j] && board[i, j] == board[(i + 3), j]) && board[i, j] == "O")
+                    else if ((board2[i, j] == board2[(i + 1), j] && board2[i, j] == board2[(i + 2), j] && board2[i, j] == board2[(i + 3), j]) && board2[i, j] == "O")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
@@ -324,20 +345,20 @@ namespace Connect4
         /// Win condition horizontal verification
         /// </summary>
         /// <param name="board">Board array</param>
-        public static void VictoryHorizontal(string[,] board)
+        public static void VictoryHorizontal(string[,] board2)
         {
-            for (int j = 0; j < (board.GetLength(1) - 3); j++)
+            for (int j = 0; j < (board2.GetLength(1) - 3); j++)
             {
-                for (int i = 0; i < board.GetLength(0); i++)
+                for (int i = 0; i < board2.GetLength(0); i++)
                 {
-                    if ((board[i, j] == board[i, (j + 1)] && board[i, j] == board[i, (j + 2)] && board[i, j] == board[i, (j + 3)]) && board[i, j] == "X")
+                    if ((board2[i, j] == board2[i, (j + 1)] && board2[i, j] == board2[i, (j + 2)] && board2[i, j] == board2[i, (j + 3)]) && board2[i, j] == "X")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
-                    else if ((board[i, j] == board[i, (j + 1)] && board[i, j] == board[i, (j + 2)] && board[i, j] == board[i, (j + 3)]) && board[i, j] == "O")
+                    else if ((board2[i, j] == board2[i, (j + 1)] && board2[i, j] == board2[i, (j + 2)] && board2[i, j] == board2[i, (j + 3)]) && board2[i, j] == "O")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
@@ -353,20 +374,20 @@ namespace Connect4
         /// Win condition diagonal down (viewing from left to right)
         /// </summary>
         /// <param name="board"> Board array</param>
-        public static void VictoryDiagonalDown(string[,] board)
+        public static void VictoryDiagonalDown(string[,] board2)
         {
-            for (int i = 0; i < (board.GetLength(0) - 3); i++)
+            for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = 0; j < (board.GetLength(1) - 3); j++)
+                for (int j = 0; j < (board2.GetLength(1) - 3); j++)
                 {
-                    if ((board[i, j] == board[(i + 1), (j + 1)] && board[i, j] == board[(i + 2), (j + 2)] && board[i, j] == board[(i + 3), (j + 3)]) && board[i, j] == "X")
+                    if ((board2[i, j] == board2[(i + 1), (j + 1)] && board2[i, j] == board2[(i + 2), (j + 2)] && board2[i, j] == board2[(i + 3), (j + 3)]) && board2[i, j] == "X")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
-                    else if ((board[i, j] == board[(i + 1), (j + 1)] && board[i, j] == board[(i + 2), (j + 2)] && board[i, j] == board[(i + 3), (j + 3)]) && board[i, j] == "O")
+                    else if ((board2[i, j] == board2[(i + 1), (j + 1)] && board2[i, j] == board2[(i + 2), (j + 2)] && board2[i, j] == board2[(i + 3), (j + 3)]) && board2[i, j] == "O")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
@@ -382,20 +403,20 @@ namespace Connect4
         /// Win conditrion diagonal up (viewing from left to right) but running through the array from right to left
         /// </summary>
         /// <param name="board">Board array</param>
-        public static void VictoryDiagonalUP(string[,] board)
+        public static void VictoryDiagonalUP(string[,] board2)
         {
-            for (int i = 0; i < (board.GetLength(0) - 3); i++)
+            for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = board.GetLength(1); j > 2; j--)
+                for (int j = (board2.GetLength(1)); j > 2; j--)
                 {
-                    if ((board[i, j] == board[(i + 1), (j - 1)] && board[i, j] == board[(i + 2), (j - 2)] && board[i, j] == board[(i + 3), (j - 3)]) && board[i, j] == "X")
+                    if ((board2[i, j] == board2[(i + 1), (j - 1)] && board2[i, j] == board2[(i + 2), (j - 2)] && board2[i, j] == board2[(i + 3), (j - 3)]) && board2[i, j] == "X")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
-                    else if ((board[i, j] == board[(i + 1), (j - 1)] && board[i, j] == board[(i + 2), (j - 2)] && board[i, j] == board[(i + 3), (j - 3)]) && board[i, j] == "O")
+                    else if ((board2[i, j] == board2[(i + 1), (j - 1)] && board2[i, j] == board2[(i + 2), (j - 2)] && board2[i, j] == board2[(i + 3), (j - 3)]) && board2[i, j] == "O")
                     {
                         Console.Clear();
                         Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
