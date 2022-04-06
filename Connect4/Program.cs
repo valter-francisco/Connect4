@@ -35,7 +35,7 @@ namespace Connect4
                 switch (menuChoice)
                 {
                     case "1":
-                        menu = true; //breaks out of the Menu and enters the Game region
+                        PvP(board, board2);
                         break;
                     case "2":
                         Console.Clear();
@@ -54,13 +54,94 @@ namespace Connect4
             } while (menu == false);
             #endregion
 
-            #region Game
+            //#region Game
+
+            //int turns = 1;
+
+
+            //do //game loop
+            //{
+            //   // Console.Clear();
+            //    DrawBoard(board, board2);
+
+            //    if (turns % 2 == 0)
+            //    {
+            //        Console.WriteLine("Player 2 insert a row.");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Player 1 insert a row.");
+            //    }
+
+
+            //    bool correctInput = false;
+            //    int inp = 0;
+
+            //    do //row choice verification loop
+            //    {
+            //        string input = Console.ReadLine();
+
+            //        try
+            //        {
+            //            input = input.Trim();
+            //            inp = Convert.ToInt32(input);
+
+            //            if (inp <= 0 || inp >= (board2.GetLength(1)+1))
+            //            {
+            //                continue;
+            //            }
+            //            else
+            //            {
+            //                inp = ConvertInput(inp);
+            //                correctInput = true;
+            //            }
+
+            //        }
+            //        catch (Exception)
+            //        {
+            //            Console.WriteLine("Insert a valid input!");
+            //        }
+            //    } while (correctInput == false); //row choice verification loop
+
+            //    bool availableRow = AvailableRow(inp, board2);
+
+            //    //inserting piece if row is available (if... else)
+            //    if (availableRow == true)
+            //    {
+            //        InsertPiece(inp, board2, turns);
+            //        turns++;
+
+
+            //    }
+
+            //    VictoryVertical(board2);
+
+            //    VictoryHorizontal(board2);
+
+            //    VictoryDiagonalDown(board2);
+            
+                
+
+            //    //VictoryDiagonalUP(board);
+
+            //} while (turns <= 41); //game loop
+
+            //Console.WriteLine("You tied!");
+            //Console.WriteLine("Press any key to exit...");
+            //Console.ReadKey();
+            //Environment.Exit(0);
+
+            //#endregion
+        }
+
+        public static void PvP(string[,] board, string[,] board2)
+        {
             int turns = 1;
 
 
             do //game loop
             {
-               // Console.Clear();
+                Console.Clear();
                 DrawBoard(board, board2);
 
                 if (turns % 2 == 0)
@@ -85,7 +166,7 @@ namespace Connect4
                         input = input.Trim();
                         inp = Convert.ToInt32(input);
 
-                        if (inp <= 0 || inp >= (board2.GetLength(1)+1))
+                        if (inp <= 0 || inp >= (board2.GetLength(1) + 1))
                         {
                             continue;
                         }
@@ -118,10 +199,8 @@ namespace Connect4
                 VictoryHorizontal(board2);
 
                 VictoryDiagonalDown(board2);
-
                 
-
-                //VictoryDiagonalUP(board);
+                VictoryDiagonalUP(board2);
 
             } while (turns <= 41); //game loop
 
@@ -130,8 +209,9 @@ namespace Connect4
             Console.ReadKey();
             Environment.Exit(0);
 
-            #endregion
+
         }
+
 
         /// <summary>
         /// Method used to draw the board
