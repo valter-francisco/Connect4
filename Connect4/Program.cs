@@ -54,86 +54,13 @@ namespace Connect4
             } while (menu == false);
             #endregion
 
-            //#region Game
-
-            //int turns = 1;
-
-
-            //do //game loop
-            //{
-            //   // Console.Clear();
-            //    DrawBoard(board, board2);
-
-            //    if (turns % 2 == 0)
-            //    {
-            //        Console.WriteLine("Player 2 insert a row.");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Player 1 insert a row.");
-            //    }
-
-
-            //    bool correctInput = false;
-            //    int inp = 0;
-
-            //    do //row choice verification loop
-            //    {
-            //        string input = Console.ReadLine();
-
-            //        try
-            //        {
-            //            input = input.Trim();
-            //            inp = Convert.ToInt32(input);
-
-            //            if (inp <= 0 || inp >= (board2.GetLength(1)+1))
-            //            {
-            //                continue;
-            //            }
-            //            else
-            //            {
-            //                inp = ConvertInput(inp);
-            //                correctInput = true;
-            //            }
-
-            //        }
-            //        catch (Exception)
-            //        {
-            //            Console.WriteLine("Insert a valid input!");
-            //        }
-            //    } while (correctInput == false); //row choice verification loop
-
-            //    bool availableRow = AvailableRow(inp, board2);
-
-            //    //inserting piece if row is available (if... else)
-            //    if (availableRow == true)
-            //    {
-            //        InsertPiece(inp, board2, turns);
-            //        turns++;
-
-
-            //    }
-
-            //    VictoryVertical(board2);
-
-            //    VictoryHorizontal(board2);
-
-            //    VictoryDiagonalDown(board2);
-            
-                
-
-            //    //VictoryDiagonalUP(board);
-
-            //} while (turns <= 41); //game loop
-
-            //Console.WriteLine("You tied!");
-            //Console.WriteLine("Press any key to exit...");
-            //Console.ReadKey();
-            //Environment.Exit(0);
-
-            //#endregion
         }
 
+        /// <summary>
+        /// Menu function for Player versus Player mode
+        /// </summary>
+        /// <param name="board">board array to draw</param>
+        /// <param name="board2">board array to store and draw information</param>
         public static void PvP(string[,] board, string[,] board2)
         {
             int turns = 1;
@@ -209,6 +136,86 @@ namespace Connect4
             Console.ReadKey();
             Environment.Exit(0);
 
+
+        }
+
+        public static void PvCPUeasy(string[,] board, string[,] board2)
+        {
+            int turns = 1;
+
+
+            do //game loop
+            {
+                Console.Clear();
+                DrawBoard(board, board2);
+
+                if (turns % 2 == 0)
+                {
+                    Random inp = new Random();
+                    inp.Next(0, board2.GetLength(1));
+
+                }
+                else
+                {
+                    Console.WriteLine("Player 1 insert a row.");
+                    bool correctInput = false;
+                    int inp = 0;
+
+                    do //row choice verification loop
+                    {
+                        string input = Console.ReadLine();
+
+                        try
+                        {
+                            input = input.Trim();
+                            inp = Convert.ToInt32(input);
+
+                            if (inp <= 0 || inp >= (board2.GetLength(1) + 1))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                inp = ConvertInput(inp);
+                                correctInput = true;
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Insert a valid input!");
+                        }
+                    } while (correctInput == false); //row choice verification loop
+
+                    bool availableRow = AvailableRow(inp, board2);
+
+                    //inserting piece if row is available (if... else)
+                    if (availableRow == true)
+                    {
+                        InsertPiece(inp, board2, turns);
+                        turns++;
+
+
+                    }
+                }
+
+
+
+
+                VictoryVertical(board2);
+
+                VictoryHorizontal(board2);
+
+                VictoryDiagonalDown(board2);
+
+                VictoryDiagonalUP(board2);
+
+            } while (turns <= 41); //game loop
+
+            Console.WriteLine("You tied!");
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+            Environment.Exit(0);
 
         }
 
@@ -400,7 +407,7 @@ namespace Connect4
         {
             for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = 0; j < board2.GetLength(1); j++)
+                for (int j = 0; j < board2.GetLength(1)-1; j++)
                 {
                     if ((board2[i, j] == board2[(i + 1), j] && board2[i, j] == board2[(i + 2), j] && board2[i, j] == board2[(i + 3), j]) && board2[i, j] == "X")
                     {
@@ -429,7 +436,7 @@ namespace Connect4
         {
             for (int j = 0; j < (board2.GetLength(1) - 3); j++)
             {
-                for (int i = 0; i < board2.GetLength(0); i++)
+                for (int i = 0; i < board2.GetLength(0)-1; i++)
                 {
                     if ((board2[i, j] == board2[i, (j + 1)] && board2[i, j] == board2[i, (j + 2)] && board2[i, j] == board2[i, (j + 3)]) && board2[i, j] == "X")
                     {
@@ -487,7 +494,7 @@ namespace Connect4
         {
             for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = (board2.GetLength(1)); j > 2; j--)
+                for (int j = (board2.GetLength(1)-1); j > 2; j--)
                 {
                     if ((board2[i, j] == board2[(i + 1), (j - 1)] && board2[i, j] == board2[(i + 2), (j - 2)] && board2[i, j] == board2[(i + 3), (j - 3)]) && board2[i, j] == "X")
                     {
