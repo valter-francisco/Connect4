@@ -28,7 +28,7 @@ namespace Connect4
             do
             {
                 Console.WriteLine("  CONNECT 4");
-                Console.WriteLine("1 - PLAY \n2 - INSTRUCTIONS");
+                Console.WriteLine("1 - Player vs. Player\n2 - Player vs. CPU easy\n3 - Player vs. CPU hard \n4 - Instructions");
                 string menuChoice = Console.ReadLine();
                 menuChoice = menuChoice.Trim();
 
@@ -38,10 +38,26 @@ namespace Connect4
                         PvP(board, board2);
                         break;
                     case "2":
+                        PvCPUeasy(board, board2);
+                        break;
+                    case "3":
+                        PvCPUhard(board, board2);
+                        break;
+                    case "4":
                         Console.Clear();
-                        Console.WriteLine("The game is played between two players, you and your opponent take turns. \nChoose a row to place your piece and it will fall to the bottom of the board.\nYou win when you connect 4, be it in a line, row or diagonally. \nIf neither player can connect 4 then the game is a tie. ");
+                        Console.WriteLine("INSTRUCTIONS" +
+                            "\n" +
+                            "\nChoose a row to place your piece and it will fall to the bottom of the board." +
+                            "\nYou win when you connect 4, be it in a line, row or diagonally. " +
+                            "\nIf neither player can connect 4 then the game is a tie." +
+                            "\nVictories get you 3 points, losses get you 0 and ties get you 1." +
+                            "\nThe first to get to 10 points wins" +
+                            "\n" +
+                            "\nIn the Player vs.Player format, the game is played between two players, you and your opponent take turns." +
+                            "\nIn the Player vs. CPU easy format, the computer will be Player 2 and will play random moves automatically" +
+                            "\nIn the Player vs. CPU hard format, the computer will be Player 2 and will make a play near yours.");
                         Console.WriteLine();
-                        DrawBoard(board,board2);
+                        DrawBoard(board, board2);
                         Console.WriteLine();
                         Console.Write("Press any key to return to main menu.");
                         Console.ReadKey();
@@ -64,100 +80,30 @@ namespace Connect4
         public static void PvP(string[,] board, string[,] board2)
         {
             int turns = 1;
+            bool victory = false;
+            int playerVictory;
+            int scoreP1 = 0;
+            int scoreP2 = 0;
+            bool oneMore = false;
 
-
-            do //game loop
+            do
             {
-                Console.Clear();
-                DrawBoard(board, board2);
-
-                if (turns % 2 == 0)
+                do //game loop
                 {
-                    Console.WriteLine("Player 2 insert a row.");
-                }
-                else
-                {
-                    Console.WriteLine("Player 1 insert a row.");
-                }
+                    playerVictory = 0;
+                    Console.Clear();
+                    DrawBoard(board, board2);
 
-
-                bool correctInput = false;
-                int inp = 0;
-
-                do //row choice verification loop
-                {
-                    string input = Console.ReadLine();
-
-                    try
+                    if (turns % 2 == 0)
                     {
-                        input = input.Trim();
-                        inp = Convert.ToInt32(input);
-
-                        if (inp <= 0 || inp >= (board2.GetLength(1) + 1))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            inp = ConvertInput(inp);
-                            correctInput = true;
-                        }
-
+                        Console.WriteLine("Player 2 insert a row.");
                     }
-                    catch (Exception)
+                    else
                     {
-                        Console.WriteLine("Insert a valid input!");
+                        Console.WriteLine("Player 1 insert a row.");
                     }
-                } while (correctInput == false); //row choice verification loop
-
-                bool availableRow = AvailableRow(inp, board2);
-
-                //inserting piece if row is available (if... else)
-                if (availableRow == true)
-                {
-                    InsertPiece(inp, board2, turns);
-                    turns++;
 
 
-                }
-
-                VictoryVertical(board2);
-
-                VictoryHorizontal(board2);
-
-                VictoryDiagonalDown(board2);
-                
-                VictoryDiagonalUP(board2);
-
-            } while (turns <= 41); //game loop
-
-            Console.WriteLine("You tied!");
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-            Environment.Exit(0);
-
-
-        }
-
-        public static void PvCPUeasy(string[,] board, string[,] board2)
-        {
-            int turns = 1;
-
-
-            do //game loop
-            {
-                Console.Clear();
-                DrawBoard(board, board2);
-
-                if (turns % 2 == 0)
-                {
-                    Random inp = new Random();
-                    inp.Next(0, board2.GetLength(1));
-
-                }
-                else
-                {
-                    Console.WriteLine("Player 1 insert a row.");
                     bool correctInput = false;
                     int inp = 0;
 
@@ -197,28 +143,394 @@ namespace Connect4
 
 
                     }
+
+                    if (VictoryVertical(board2) != 0)
+                    {
+                        playerVictory = VictoryVertical(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryHorizontal(board2) != 0)
+                    {
+                        playerVictory = VictoryHorizontal(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalDown(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalDown(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalUP(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalUP(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+
+                } while (turns <= 41 || victory == false); //game loop
+
+                if (turns >= 41)
+                {
+                    Console.WriteLine("You tied");
+                    scoreP1 = scoreP1 + 1;
+                    scoreP2 = scoreP2 + 1;
+                }
+                else if (playerVictory == 1)
+                {
+                    scoreP1 = scoreP1 + 3;
+                }
+                else if (playerVictory == 2)
+                {
+                    scoreP2 = scoreP2 + 3;
                 }
 
+                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+            }
+            while (scoreP1 <= 10 || scoreP2 <= 10);
 
-
-
-                VictoryVertical(board2);
-
-                VictoryHorizontal(board2);
-
-                VictoryDiagonalDown(board2);
-
-                VictoryDiagonalUP(board2);
-
-            } while (turns <= 41); //game loop
-
-            Console.WriteLine("You tied!");
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-            Environment.Exit(0);
-
+            if (scoreP1 <= 10)
+            {
+                Console.WriteLine("Player 1 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine("Player 2 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
 
+        /// <summary>
+        /// Menu function for Player versus CPU easy mode
+        /// </summary>
+        /// <param name="board">board array to draw</param>
+        /// <param name="board2">board array to store and draw information</param>
+        public static void PvCPUeasy(string[,] board, string[,] board2)
+        {
+            int turns = 1;
+            bool victory = false;
+            int playerVictory;
+            int scoreP1 = 0;
+            int scoreP2 = 0;
+            bool oneMore = false;
+
+            do
+            {
+                do //game loop
+                {
+                    playerVictory = 0;
+                    Console.Clear();
+                    DrawBoard(board, board2);
+
+                    if (turns % 2 == 0)
+                    {
+                        bool availableRow = false;
+                        do
+                        {
+                            Random inp = new Random();
+                            int input = inp.Next(0, board2.GetLength(1));
+
+                            availableRow = AvailableRow(input, board2);
+                            if (availableRow == true)
+                            {
+                                InsertPiece(input, board2, turns);
+                            }
+                        }
+                        while (availableRow == false);
+                        turns++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Player 1 insert a row.");
+                        bool correctInput = false;
+                        int inp = 0;
+
+                        do //row choice verification loop
+                        {
+                            string input = Console.ReadLine();
+
+                            try
+                            {
+                                input = input.Trim();
+                                inp = Convert.ToInt32(input);
+
+                                if (inp <= 0 || inp >= (board2.GetLength(1) + 1))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    inp = ConvertInput(inp);
+                                    correctInput = true;
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Insert a valid input!");
+                            }
+                        } while (correctInput == false); //row choice verification loop
+
+                        bool availableRow = AvailableRow(inp, board2);
+
+                        //inserting piece if row is available (if... else)
+                        if (availableRow == true)
+                        {
+                            InsertPiece(inp, board2, turns);
+                            turns++;
+                        }
+                    }
+
+                    if (VictoryVertical(board2) != 0)
+                    {
+                        playerVictory = VictoryVertical(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryHorizontal(board2) != 0)
+                    {
+                        playerVictory = VictoryHorizontal(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalDown(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalDown(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalUP(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalUP(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+
+                } while (turns <= 41 || victory == false); //game loop
+
+
+                if (turns >= 41)
+                {
+                    Console.WriteLine("You tied");
+                    scoreP1 = scoreP1 + 1;
+                    scoreP2 = scoreP2 + 1;
+                }
+                else if (playerVictory == 1)
+                {
+                    scoreP1 = scoreP1 + 3;
+                }
+                else if (playerVictory == 2)
+                {
+                    scoreP2 = scoreP2 + 3;
+                }
+
+                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+            }
+            while (scoreP1 <= 10 || scoreP2 <= 10);
+
+            if (scoreP1 <= 10)
+            {
+                Console.WriteLine("Player 1 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine("Player 2 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+        }
+
+        /// <summary>
+        /// Menu funtion for Player versus CPU hard mode
+        /// </summary>
+        /// <param name="board">board array to draw</param>
+        /// <param name="board2">board array to store and draw information</param>
+        public static void PvCPUhard(string[,] board, string[,] board2)
+        {
+            int inp = 0;
+            int turns = 1;
+            bool victory = false;
+            int playerVictory;
+            int scoreP1 = 0;
+            int scoreP2 = 0;
+            bool oneMore = false;
+
+            do
+            {
+                do //game loop
+                {
+                    playerVictory = 0;
+                    Console.Clear();
+                    DrawBoard(board, board2);
+                    int lastPlayerInput = StoreLastPlay(inp);
+
+                    if (turns % 2 == 0)
+                    {
+                        bool availableRow = false;
+                        do
+                        {
+                            Random nearby = new Random();
+                            int input = lastPlayerInput + nearby.Next(-1, 2);
+
+                            availableRow = AvailableRow(input, board2);
+                            if (availableRow == true)
+                            {
+                                InsertPiece(input, board2, turns);
+                            }
+                        }
+                        while (availableRow == false);
+                        turns++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Player 1 insert a row.");
+                        bool correctInput = false;
+
+
+                        do //row choice verification loop
+                        {
+                            string input = Console.ReadLine();
+
+                            try
+                            {
+                                input = input.Trim();
+                                inp = Convert.ToInt32(input);
+
+                                if (inp <= 0 || inp >= (board2.GetLength(1) + 1))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    inp = ConvertInput(inp);
+                                    correctInput = true;
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Insert a valid input!");
+                            }
+                        } while (correctInput == false); //row choice verification loop
+
+                        bool availableRow = AvailableRow(inp, board2);
+
+                        //inserting piece if row is available (if... else)
+                        if (availableRow == true)
+                        {
+                            InsertPiece(inp, board2, turns);
+                            turns++;
+                        }
+
+                    }
+
+
+                    if (VictoryVertical(board2) != 0)
+                    {
+                        playerVictory = VictoryVertical(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryHorizontal(board2) != 0)
+                    {
+                        playerVictory = VictoryHorizontal(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalDown(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalDown(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+                    else if (VictoryDiagonalUP(board2) != 0)
+                    {
+                        playerVictory = VictoryDiagonalUP(board2);
+                        Console.WriteLine("Player {0} wins!", playerVictory);
+                        victory = true;
+                    }
+
+
+                } while (turns <= 41 || victory == false); //game loop
+
+
+                if (turns >= 41)
+                {
+                    Console.WriteLine("You tied");
+                    scoreP1 = scoreP1 + 1;
+                    scoreP2 = scoreP2 + 1;
+                }
+                else if (playerVictory == 1)
+                {
+                    scoreP1 = scoreP1 + 3;
+                }
+                else if (playerVictory == 2)
+                {
+                    scoreP2 = scoreP2 + 3;
+                }
+
+                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+            }
+            while (scoreP1 <= 10 || scoreP2 <= 10);
+
+            if (scoreP1 <= 10)
+            {
+                Console.WriteLine("Player 1 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine("Player 2 wins the tournament!");
+                Console.WriteLine("Press any key to exit the application. . .");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+        }
+
+        /// <summary>
+        /// Function used at the end of a game to know if the players want to go another round
+        /// </summary>
+        /// <param name="scoreP1">Player 1 score</param>
+        /// <param name="scoreP2">Player 2 score</param>
+        /// <param name="oneMore">boolean to alter the value in order to repeat the cycle</param>
+        public static void PlayAgainCycle(int scoreP1, int scoreP2, bool oneMore)
+        {
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("The scores are: \nPlayer 1 : {0} \nPlayer 2 : {1}", scoreP1, scoreP2);
+                Console.WriteLine("Want to play again? Yes(y) No(n)");
+                string playAgain = Console.ReadLine();
+                playAgain = playAgain.Trim();
+                playAgain = playAgain.ToLower();
+
+                switch (playAgain)
+                {
+                    case "y":
+                        oneMore = true;
+                        break;
+                    case "n":
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("Please insert a valid input.");
+                        break;
+                }
+            }
+            while (oneMore == false);
+        }
 
         /// <summary>
         /// Method used to draw the board
@@ -267,7 +579,7 @@ namespace Connect4
                 for (int j = 0; j < board2.GetLength(1); j++)
                 {
                     bool isEmpty = String.IsNullOrEmpty(board2[i, j]);
-                    if(isEmpty == false)
+                    if (isEmpty == false)
                     {
                         Console.Write("| " + board2[i, j] + " ");
                     }
@@ -296,6 +608,16 @@ namespace Connect4
         {
             int inp = input - 1;
             return inp;
+        }
+
+        /// <summary>
+        /// Function used in Player versus CPU hard to store player's last play and use it to decide the CPU play
+        /// </summary>
+        /// <param name="input">player input, integer</param>
+        /// <returns>returns the integer</returns>
+        public static int StoreLastPlay(int input)
+        {
+            return input;
         }
 
         /// <summary>
@@ -329,7 +651,7 @@ namespace Connect4
             if (turns % 2 == 0)
             {
                 input = "0";
-               
+
             }
             else
             {
@@ -337,131 +659,86 @@ namespace Connect4
             }
 
             for (int i = (board2.GetLength(0) - 1); i >= 0; i--)
-            {         
-                
+            {
+
                 bool isEmpty = String.IsNullOrEmpty(board2[i, inp]);
                 if (isEmpty == true && i == board2.GetLength(0) - 1)
                 {
                     board2[i, inp] = input;
                     return;
-                    
+
                 }
-                else if (isEmpty == true )
+                else if (isEmpty == true)
                 {
                     board2[(i), inp] = input;
                     return;
-                    
+
                 }
             }
         }
 
-        ///// <summary>
-        ///// Method used to insert piece X
-        ///// </summary>
-        ///// <param name="inp">Row chosen by the player, used after verification</param>
-        ///// <param name="board">Board array</param>
-        //public static void InsertPieceX(int inp, string[,] board)
-        //{
-        //    for (int i = 0; i < 6; i++)
-        //    {
-        //        if(board[i, inp] != " ")
-        //        {
-        //            board[(i-1), inp] = "X";
-        //            return; 
-        //        }
-        //        else if (board[i, inp] == " " && i == 5)
-        //        {
-        //            board[i, inp] = "X";
-        //            return;
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Method used to insert piece O
-        ///// </summary>
-        ///// <param name="inp">Row chosen by the player, used after verification</param>
-        ///// <param name="board">Board array</param>
-        //public static void InsertPieceO(int inp, string[,] board)
-        //{
-        //    for (int i = 0; i < 6; i++)
-        //    {
-        //        if (board[i, inp] != " ")
-        //        {
-        //            board[(i - 1), inp] = "O";
-        //            return;
-        //        }
-        //        else if (board[i, inp] == " " && i == 5)
-        //        {
-        //            board[i, inp] = "O";
-        //            return;
-        //        }
-        //    }
-        //}
-
         /// <summary>
-        /// Win condition vertical verification
+        /// Win condition vertical
         /// </summary>
-        /// <param name="board">Board array</param> 
-        public static void VictoryVertical(string[,] board2)
+        /// <param name="board2">board to store information</param>
+        /// <returns>1 - player 1 wins
+        /// 2 - player 2 wins
+        /// 0 - no win</returns>
+        public static int VictoryVertical(string[,] board2)
         {
             for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = 0; j < board2.GetLength(1)-1; j++)
+                for (int j = 0; j < board2.GetLength(1); j++)
                 {
                     if ((board2[i, j] == board2[(i + 1), j] && board2[i, j] == board2[(i + 2), j] && board2[i, j] == board2[(i + 3), j]) && board2[i, j] == "X")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 1;
                     }
                     else if ((board2[i, j] == board2[(i + 1), j] && board2[i, j] == board2[(i + 2), j] && board2[i, j] == board2[(i + 3), j]) && board2[i, j] == "O")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 2;
                     }
                 }
             }
-            return;
+            return 0;
         }
 
+
         /// <summary>
-        /// Win condition horizontal verification
+        /// Win condition horizontal
         /// </summary>
-        /// <param name="board">Board array</param>
-        public static void VictoryHorizontal(string[,] board2)
+        /// <param name="board2">board to store information</param>
+        /// <returns>1 - player 1 wins
+        /// 2 - player 2 wins
+        /// 0 - no win</returns>
+        public static int VictoryHorizontal(string[,] board2)
         {
             for (int j = 0; j < (board2.GetLength(1) - 3); j++)
             {
-                for (int i = 0; i < board2.GetLength(0)-1; i++)
+                for (int i = 0; i < board2.GetLength(0); i++)
                 {
                     if ((board2[i, j] == board2[i, (j + 1)] && board2[i, j] == board2[i, (j + 2)] && board2[i, j] == board2[i, (j + 3)]) && board2[i, j] == "X")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 1;
                     }
                     else if ((board2[i, j] == board2[i, (j + 1)] && board2[i, j] == board2[i, (j + 2)] && board2[i, j] == board2[i, (j + 3)]) && board2[i, j] == "O")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 2;
                     }
                 }
             }
-            return;
+            return 0;
         }
+
 
         /// <summary>
         /// Win condition diagonal down (viewing from left to right)
         /// </summary>
-        /// <param name="board"> Board array</param>
-        public static void VictoryDiagonalDown(string[,] board2)
+        /// <param name="board2">board to store information</param>
+        /// <returns>1 - player 1 wins
+        /// 2 - player 2 wins
+        /// 0 - no win</returns>
+        public static int VictoryDiagonalDown(string[,] board2)
         {
             for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
@@ -469,50 +746,41 @@ namespace Connect4
                 {
                     if ((board2[i, j] == board2[(i + 1), (j + 1)] && board2[i, j] == board2[(i + 2), (j + 2)] && board2[i, j] == board2[(i + 3), (j + 3)]) && board2[i, j] == "X")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 1;
                     }
                     else if ((board2[i, j] == board2[(i + 1), (j + 1)] && board2[i, j] == board2[(i + 2), (j + 2)] && board2[i, j] == board2[(i + 3), (j + 3)]) && board2[i, j] == "O")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 2;
                     }
                 }
             }
-            return;
+            return 0;
         }
 
         /// <summary>
-        /// Win conditrion diagonal up (viewing from left to right) but running through the array from right to left
+        /// Win condition diagonal up (viewing from left to right)
         /// </summary>
-        /// <param name="board">Board array</param>
-        public static void VictoryDiagonalUP(string[,] board2)
+        /// <param name="board2">board to store information</param>
+        /// <returns>1 - player 1 wins
+        /// 2 - player 2 wins
+        /// 0 - no win</returns>
+        public static int VictoryDiagonalUP(string[,] board2)
         {
             for (int i = 0; i < (board2.GetLength(0) - 3); i++)
             {
-                for (int j = (board2.GetLength(1)-1); j > 2; j--)
+                for (int j = (board2.GetLength(1) - 1); j > 2; j--)
                 {
                     if ((board2[i, j] == board2[(i + 1), (j - 1)] && board2[i, j] == board2[(i + 2), (j - 2)] && board2[i, j] == board2[(i + 3), (j - 3)]) && board2[i, j] == "X")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 1 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 1;
                     }
                     else if ((board2[i, j] == board2[(i + 1), (j - 1)] && board2[i, j] == board2[(i + 2), (j - 2)] && board2[i, j] == board2[(i + 3), (j - 3)]) && board2[i, j] == "O")
                     {
-                        Console.Clear();
-                        Console.WriteLine("Player 2 WINS! \nPress any key to exit...");
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        return 2;
                     }
                 }
             }
-            return;
+            return 0;
         }
     }
 }
