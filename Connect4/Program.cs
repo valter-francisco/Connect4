@@ -7,7 +7,7 @@ namespace Connect4
     {
         static void Main(string[] args)
         {
-            //123
+            
 
             #region Board Array
 
