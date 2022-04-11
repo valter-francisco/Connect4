@@ -7,18 +7,18 @@ namespace Connect4
     {
         static void Main(string[] args)
         {
-            
+
 
             #region Board Array
 
             string[,] board = new string[16, 16];
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                for (int j = 0; j < board.GetLength(1); j++)
-                {
-                    board[i, j] = " ";
-                }
-            }
+            //for (int i = 0; i < board.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < board.GetLength(1); j++)
+            //    {
+            //        board[i, j] = " ";
+            //    }
+            //}
 
             string[,] board2 = new string[16, 16];
 
@@ -58,7 +58,7 @@ namespace Connect4
                             "\nIn the Player vs. CPU easy format, the computer will be Player 2 and will play random moves automatically" +
                             "\nIn the Player vs. CPU hard format, the computer will be Player 2 and will make a play near yours.");
                         Console.WriteLine();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine();
                         Console.Write("Press any key to return to main menu.");
                         Console.ReadKey();
@@ -85,14 +85,15 @@ namespace Connect4
             int scoreP1 = 0;
             int scoreP2 = 0;
             bool oneMore = false;
-
+            board = FillBoardStart(board);
+            DrawBoard(board);
             do
             {
                 do //game loop
                 {
                     playerVictory = 0;
-                    Console.Clear();
-                    DrawBoard(board, board2);
+                    //Console.Clear();
+                    //DrawBoard(board);
 
                     if (turns % 2 == 0)
                     {
@@ -143,26 +144,26 @@ namespace Connect4
 
 
                     }
-                    int vVertical = VictoryVertical(board2);
-                    int vHorizontal = VictoryHorizontal(board2);
-                    int vDiagUp = VictoryDiagonalUP(board2);
-                    int vDiagDown = VictoryDiagonalDown(board2);
+                    int vVertical = VictoryVertical(board);
+                    int vHorizontal = VictoryHorizontal(board);
+                    int vDiagUp = VictoryDiagonalUP(board);
+                    int vDiagDown = VictoryDiagonalDown(board);
 
                     if (vVertical != 0)
                     {
                         playerVictory = vVertical;
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        //DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();  
+                        Console.ReadKey();
                         break;
                     }
                     else if (vHorizontal != 0)
                     {
                         playerVictory = vHorizontal;
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        //DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -172,7 +173,7 @@ namespace Connect4
                     {
                         playerVictory = vDiagDown;
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -182,7 +183,7 @@ namespace Connect4
                     {
                         playerVictory = vDiagUp;
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -246,7 +247,7 @@ namespace Connect4
                 {
                     playerVictory = 0;
                     Console.Clear();
-                    DrawBoard(board, board2);
+                    DrawBoard(board);
 
                     if (turns % 2 == 0)
                     {
@@ -311,7 +312,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryVertical(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -321,7 +322,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryHorizontal(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -331,7 +332,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryDiagonalDown(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -341,7 +342,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryDiagonalUP(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -407,7 +408,7 @@ namespace Connect4
                 {
                     playerVictory = 0;
                     Console.Clear();
-                    DrawBoard(board, board2);
+                    DrawBoard(board);
                     int lastPlayerInput = StoreLastPlay(inp);
 
                     if (turns % 2 == 0)
@@ -475,7 +476,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryVertical(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -485,7 +486,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryHorizontal(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -495,7 +496,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryDiagonalDown(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -505,7 +506,7 @@ namespace Connect4
                     {
                         playerVictory = VictoryDiagonalUP(board2);
                         Console.Clear();
-                        DrawBoard(board, board2);
+                        DrawBoard(board);
                         Console.WriteLine("Player {0} wins!", playerVictory);
                         Console.WriteLine("Press any key to continue...");
                         Console.ReadKey();
@@ -572,14 +573,14 @@ namespace Connect4
                 switch (playAgain)
                 {
                     case "y":
-                        for(int i = 0; i < board2.GetLength(0); i++)
+                        for (int i = 0; i < board2.GetLength(0); i++)
                         {
-                            for(int j = 0; j < board2.GetLength(1); j++)
+                            for (int j = 0; j < board2.GetLength(1); j++)
                             {
                                 board2[i, j] = "";
                             }
                         }
-                        
+
                         oneMore = true;
                         break;
                     case "n":
@@ -593,11 +594,25 @@ namespace Connect4
             while (oneMore == false);
         }
 
+        public static string[,] FillBoardStart(string[,] board)
+        {
+            int lines = board.GetLength(0) - 1;
+            int columns = board.GetLength(1) - 1;
+            string emptyChar = " ";
+
+            // Fill the hole board with char
+            for (int i = 0; i < lines; i++)
+                for (int j = 0; j < columns; j++)
+                    board[lines, columns] = emptyChar;
+
+            return board;
+        }
+
         /// <summary>
         /// Method used to draw the board
         /// </summary>
         /// <param name="board">array used to store the board variables</param>
-        public static void DrawBoard(string[,] board, string[,] board2)
+        public static void DrawBoard(string[,] board)
         {
             //Console.WriteLine("        R  O  W  S   ");
             //Console.WriteLine("| 1 | 2 | 3 | 4 | 5 | 6 | 7 |");
@@ -634,30 +649,52 @@ namespace Connect4
                 Console.Write("----");
             Console.WriteLine();
 
-            for (int i = 0; i < board2.GetLength(0); i++)
+            int lines = board.GetLength(0) - 1;
+            int columns = board.GetLength(1) - 1;
+
+
+            // Fill the hole board with char
+            for (int i = 0; i < lines; i++)
             {
 
-                for (int j = 0; j < board2.GetLength(1); j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    bool isEmpty = String.IsNullOrEmpty(board2[i, j]);
-                    if (isEmpty == false)
-                    {
-                        Console.Write("| " + board2[i, j] + " ");
-                    }
+                    if (j == columns)
+                        Console.Write("| " + board[lines, columns] + " |");
+
                     else
-                    {
-                        Console.Write("| " + board[i, j] + " ");
-                    }
-
-
+                        Console.Write("| " + board[lines, columns] + " ");
                 }
                 Console.WriteLine("|");
-
                 for (int repeat = 0; repeat < board.GetLength(1); repeat++)
                     Console.Write("----");
-
                 Console.WriteLine();
             }
+
+            //for (int i = 0; i < board2.GetLength(0); i++)
+            //{
+
+            //    for (int j = 0; j < board2.GetLength(1); j++)
+            //    {
+            //        bool isEmpty = String.IsNullOrEmpty(board2[i, j]);
+            //        if (isEmpty == false)
+            //        {
+            //            Console.Write("| " + board2[i, j] + " ");
+            //        }
+            //        else
+            //        {
+            //            Console.Write("| " + board[i, j] + " ");
+            //        }
+
+
+            //    }
+            //    Console.WriteLine("|");
+
+            //    for (int repeat = 0; repeat < board.GetLength(1); repeat++)
+            //        Console.Write("----");
+
+            //    Console.WriteLine();
+            //}
         }
 
         /// <summary>
@@ -706,7 +743,7 @@ namespace Connect4
         /// </summary>
         /// <param name="inp">Row chosen by the player, used after verification</param>
         /// <param name="board">Board array</param>
-        public static void InsertPiece(int inp, string[,] board2, int turns)
+        public static string[,] InsertPiece(int inp, string[,] board, int turns)
         {
             string input;
             if (turns % 2 == 0)
@@ -719,23 +756,23 @@ namespace Connect4
                 input = "X";
             }
 
-            for (int i = (board2.GetLength(0) - 1); i >= 0; i--)
+            for (int i = (board.GetLength(0) - 1); i >= 0; i--)
             {
 
-                bool isEmpty = String.IsNullOrEmpty(board2[i, inp]);
-                if (isEmpty == true && i == board2.GetLength(0) - 1)
+                bool isEmpty = String.IsNullOrEmpty(board[i, inp]);
+                if (isEmpty == true && i == board.GetLength(0) - 1)
                 {
-                    board2[i, inp] = input;
-                    return;
+                    board[i, inp] = input;
+
 
                 }
                 else if (isEmpty == true)
                 {
-                    board2[(i), inp] = input;
-                    return;
+                    board[(i), inp] = input;
 
                 }
             }
+            return board;
         }
 
         /// <summary>
