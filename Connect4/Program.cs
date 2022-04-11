@@ -7,6 +7,7 @@ namespace Connect4
     {
         static void Main(string[] args)
         {
+            //123
 
             #region Board Array
 
@@ -80,7 +81,6 @@ namespace Connect4
         public static void PvP(string[,] board, string[,] board2)
         {
             int turns = 1;
-            bool victory = false;
             int playerVictory;
             int scoreP1 = 0;
             int scoreP2 = 0;
@@ -143,33 +143,53 @@ namespace Connect4
 
 
                     }
+                    int vVertical = VictoryVertical(board2);
+                    int vHorizontal = VictoryHorizontal(board2);
+                    int vDiagUp = VictoryDiagonalUP(board2);
+                    int vDiagDown = VictoryDiagonalDown(board2);
 
-                    if (VictoryVertical(board2) != 0)
+                    if (vVertical != 0)
                     {
-                        playerVictory = VictoryVertical(board2);
+                        playerVictory = vVertical;
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();  
+                        break;
                     }
-                    else if (VictoryHorizontal(board2) != 0)
+                    else if (vHorizontal != 0)
                     {
-                        playerVictory = VictoryHorizontal(board2);
+                        playerVictory = vHorizontal;
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
-                    else if (VictoryDiagonalDown(board2) != 0)
+                    else if (vDiagDown != 0)
                     {
-                        playerVictory = VictoryDiagonalDown(board2);
+                        playerVictory = vDiagDown;
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
-                    else if (VictoryDiagonalUP(board2) != 0)
+                    else if (vDiagUp != 0)
                     {
-                        playerVictory = VictoryDiagonalUP(board2);
+                        playerVictory = vDiagUp;
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
 
-                } while (turns <= 41 || victory == false); //game loop
+                } while (turns <= 41); //game loop
 
                 if (turns >= 41)
                 {
@@ -186,7 +206,8 @@ namespace Connect4
                     scoreP2 = scoreP2 + 3;
                 }
 
-                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+                PlayAgainCycle(scoreP1, scoreP2, oneMore, board2);
+                turns = 1;
             }
             while (scoreP1 <= 10 || scoreP2 <= 10);
 
@@ -214,7 +235,6 @@ namespace Connect4
         public static void PvCPUeasy(string[,] board, string[,] board2)
         {
             int turns = 1;
-            bool victory = false;
             int playerVictory;
             int scoreP1 = 0;
             int scoreP2 = 0;
@@ -290,29 +310,45 @@ namespace Connect4
                     if (VictoryVertical(board2) != 0)
                     {
                         playerVictory = VictoryVertical(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryHorizontal(board2) != 0)
                     {
                         playerVictory = VictoryHorizontal(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryDiagonalDown(board2) != 0)
                     {
                         playerVictory = VictoryDiagonalDown(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryDiagonalUP(board2) != 0)
                     {
                         playerVictory = VictoryDiagonalUP(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
 
-                } while (turns <= 41 || victory == false); //game loop
+                } while (turns <= 41); //game loop
 
 
                 if (turns >= 41)
@@ -330,7 +366,8 @@ namespace Connect4
                     scoreP2 = scoreP2 + 3;
                 }
 
-                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+                PlayAgainCycle(scoreP1, scoreP2, oneMore, board2);
+                turns = 1;
             }
             while (scoreP1 <= 10 || scoreP2 <= 10);
 
@@ -359,7 +396,6 @@ namespace Connect4
         {
             int inp = 0;
             int turns = 1;
-            bool victory = false;
             int playerVictory;
             int scoreP1 = 0;
             int scoreP2 = 0;
@@ -438,30 +474,46 @@ namespace Connect4
                     if (VictoryVertical(board2) != 0)
                     {
                         playerVictory = VictoryVertical(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryHorizontal(board2) != 0)
                     {
                         playerVictory = VictoryHorizontal(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryDiagonalDown(board2) != 0)
                     {
                         playerVictory = VictoryDiagonalDown(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
                     else if (VictoryDiagonalUP(board2) != 0)
                     {
                         playerVictory = VictoryDiagonalUP(board2);
+                        Console.Clear();
+                        DrawBoard(board, board2);
                         Console.WriteLine("Player {0} wins!", playerVictory);
-                        victory = true;
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
                     }
 
 
-                } while (turns <= 41 || victory == false); //game loop
+                } while (turns <= 41); //game loop
 
 
                 if (turns >= 41)
@@ -479,7 +531,8 @@ namespace Connect4
                     scoreP2 = scoreP2 + 3;
                 }
 
-                PlayAgainCycle(scoreP1, scoreP2, oneMore);
+                PlayAgainCycle(scoreP1, scoreP2, oneMore, board2);
+                turns = 1;
             }
             while (scoreP1 <= 10 || scoreP2 <= 10);
 
@@ -505,7 +558,7 @@ namespace Connect4
         /// <param name="scoreP1">Player 1 score</param>
         /// <param name="scoreP2">Player 2 score</param>
         /// <param name="oneMore">boolean to alter the value in order to repeat the cycle</param>
-        public static void PlayAgainCycle(int scoreP1, int scoreP2, bool oneMore)
+        public static void PlayAgainCycle(int scoreP1, int scoreP2, bool oneMore, string[,] board2)
         {
             do
             {
@@ -519,6 +572,14 @@ namespace Connect4
                 switch (playAgain)
                 {
                     case "y":
+                        for(int i = 0; i < board2.GetLength(0); i++)
+                        {
+                            for(int j = 0; j < board2.GetLength(1); j++)
+                            {
+                                board2[i, j] = "";
+                            }
+                        }
+                        
                         oneMore = true;
                         break;
                     case "n":
@@ -650,7 +711,7 @@ namespace Connect4
             string input;
             if (turns % 2 == 0)
             {
-                input = "0";
+                input = "O";
 
             }
             else
@@ -703,7 +764,6 @@ namespace Connect4
             return 0;
         }
 
-
         /// <summary>
         /// Win condition horizontal
         /// </summary>
@@ -729,7 +789,6 @@ namespace Connect4
             }
             return 0;
         }
-
 
         /// <summary>
         /// Win condition diagonal down (viewing from left to right)
